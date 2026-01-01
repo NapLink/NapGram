@@ -1,17 +1,14 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "plugins": [
-      {
-        "name": "@kitajs/ts-html-plugin"
-      }
-    ],
+    "baseUrl": ".",
+    "outDir": "build",
+    "noEmit": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "jsx": "react",
     "jsxFactory": "Html.createElement",
     "jsxFragmentFactory": "Html.Fragment",
-    "baseUrl": ".",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
     "paths": {
       "@napgram/feature-kit": [
         "../packages/feature-kit/src/index.ts"
@@ -44,14 +41,10 @@
         "../packages/web-interfaces/src/index.ts"
       ]
     },
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "outDir": "build",
-    "sourceMap": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "types": [
-      "node"
+    "plugins": [
+      {
+        "name": "@kitajs/ts-html-plugin"
+      }
     ]
   },
   "include": [

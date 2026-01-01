@@ -1,18 +1,8 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2022",
-        "module": "ES2022",
-        "lib": [
-            "ES2022"
-        ],
         "outDir": "./dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "declaration": true,
+        "rootDir": "./src",
         "baseUrl": ".",
         "paths": {
             "@napgram/message-kit": [
@@ -24,10 +14,7 @@
             "@napgram/media-kit": [
                 "../media-kit/src/index.ts"
             ]
-        },
-        "types": [
-            "node"
-        ]
+        }
     },
     "include": [
         "src/**/*",

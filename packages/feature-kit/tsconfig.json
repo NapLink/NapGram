@@ -1,19 +1,8 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ES2022",
-        "module": "ES2022",
-        "lib": [
-            "ES2022"
-        ],
         "outDir": "./dist",
         "rootDir": "./src",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "declaration": true,
         "baseUrl": ".",
         "paths": {
             "@napgram/feature-kit": [
@@ -25,7 +14,8 @@
         }
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "../../main/src/domain/models/Instance.ts"
     ],
     "exclude": [
         "node_modules",
