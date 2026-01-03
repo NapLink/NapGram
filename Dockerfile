@@ -43,7 +43,6 @@ RUN if [ "$USE_MIRROR" = "true" ]; then \
 
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json* tsconfig.base.json /app/
 COPY main/package.json /app/main/
-COPY main/prisma/ /app/main/prisma/
 COPY web/package.json /app/web/
 COPY packages/ /app/packages/
 COPY external/sdk/ /app/external/sdk/
@@ -55,7 +54,6 @@ COPY external/sdk/ /app/external/sdk/
 #    - silk-wasm 是纯 WASM，无需编译
 RUN pnpm install --no-frozen-lockfile --shamefully-hoist --ignore-scripts && \
     pnpm -r rebuild better-sqlite3 && \
-    DATABASE_URL="postgresql://dummy" pnpm --filter ./main exec prisma generate --no-hints && \
     pnpm --filter "./packages/**" run build
 
 # 源码构建（后端）
@@ -73,8 +71,6 @@ COPY --from=build --chown=node:node /app/node_modules /app/node_modules
 COPY --from=build --chown=node:node /app/external/sdk /app/external/sdk
 COPY --from=build --chown=node:node /app/main/build /app/build
 COPY --from=build --chown=node:node /app/main/package.json /app/package.json
-COPY --from=build --chown=node:node /app/main/prisma /app/prisma
-COPY --from=build --chown=node:node /app/main/prisma.config.js /app/prisma.config.js
 COPY --from=build --chown=node:node /app/web/dist /app/public
 
 # 确保 ESM 兼容

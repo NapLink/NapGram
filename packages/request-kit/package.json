@@ -26,7 +26,8 @@
     "license": "MIT",
     "dependencies": {
         "@napgram/infra-kit": "workspace:*",
-        "@napgram/qq-client": "workspace:*"
+        "@napgram/qq-client": "workspace:*",
+        "drizzle-orm": "^0.45.1"
     },
     "devDependencies": {
         "@types/node": "25.0.3",
