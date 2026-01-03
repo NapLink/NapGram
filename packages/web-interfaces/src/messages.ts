@@ -5,6 +5,14 @@ import {
   getLogger,
   Instance,
   TTLCache,
+  schema,
+  eq,
+  and,
+  or,
+  lt,
+  desc,
+  count,
+  like,
 } from '@napgram/runtime-kit/legacy'
 import { authMiddleware } from '@napgram/auth-kit'
 import { processNestedForward } from '@napgram/message-kit'
@@ -60,8 +68,8 @@ export default async function (fastify: FastifyInstance) {
       return ErrorResponses.badRequest(reply, 'messageId is required')
     }
 
-    const msg = await (db as any).message.findUnique({
-      where: { id: messageId },
+    const msg = await db.query.message.findFirst({
+      where: eq(schema.message.id, messageId),
     })
 
     if (!msg) {

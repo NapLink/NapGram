@@ -11,7 +11,8 @@ export const pool = new Pool({
     connectionString,
 });
 
-export const drizzleDb = drizzle(pool, { schema });
+export const db = drizzle(pool, { schema });
+export const drizzleDb = db;
 
 // Export schema for easy access
 export { schema };
