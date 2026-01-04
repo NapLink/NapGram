@@ -357,7 +357,7 @@ export default async function (fastify: FastifyInstance) {
       return ApiResponse.success(result)
     }
     catch (error: any) {
-      logger.error({ error: error?.message || String(error) }, 'Plugin install failed')
+      logger.error({ error: error?.message || String(error), stack: error?.stack, data: body.data }, 'Plugin install failed')
       return reply.code(500).send(ApiResponse.error(error?.message || String(error)))
     }
   })
@@ -439,6 +439,7 @@ export default async function (fastify: FastifyInstance) {
       return ApiResponse.success(result)
     }
     catch (error: any) {
+      logger.error({ error: error?.message || String(error), stack: error?.stack, pluginId: String((request.params as any).id) }, 'Plugin uninstall failed')
       return reply.code(500).send(ApiResponse.error(error?.message || String(error)))
     }
   })
