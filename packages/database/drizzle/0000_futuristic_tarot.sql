@@ -1,6 +1,18 @@
-CREATE SCHEMA IF NOT EXISTS "slave_market";
+-- Create schema if it doesn't exist
+DO $$
+BEGIN
+    CREATE SCHEMA IF NOT EXISTS "slave_market";
+EXCEPTION
+    WHEN duplicate_schema THEN NULL;
+END $$;
 --> statement-breakpoint
-CREATE TYPE "public"."QqBotType" AS ENUM('napcat');--> statement-breakpoint
+-- Create enum type if it doesn't exist
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'QqBotType') THEN
+        CREATE TYPE "public"."QqBotType" AS ENUM('napcat');
+    END IF;
+END $$;--> statement-breakpoint
 CREATE TABLE "AccessToken" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"token" text NOT NULL,
