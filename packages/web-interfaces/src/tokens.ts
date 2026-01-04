@@ -51,12 +51,12 @@ export default async function (fastify: FastifyInstance) {
         .from(schema.accessToken)
         .orderBy(desc(schema.accessToken.id))
 
-      return ApiResponse.success({
-        data: tokens.map((t: any) => ({
+      return ApiResponse.success(
+        tokens.map((t: any) => ({
           ...t,
           token: maskToken(t.token),
         })),
-      })
+      )
     },
   )
 
