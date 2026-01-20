@@ -221,44 +221,9 @@ jobs:
                 // Run install and Capture output/errors clearly
                 try {
                    console.log(`Attempting pnpm install with override ${pkgName}@${cleanVer}...`);
-                   execSync('pnpm install', { encoding: 'utf8', stdio: 'pipe' }); // stdio pipe to capture
+                   // Must use --no-frozen-lockfile because we just modified package.json
+                   execSync('pnpm install --no-frozen-lockfile', { encoding: 'utf8', stdio: 'pipe' }); 
                    console.log('Override installation successful.');
-                   
-                   // Prepare PR (restore old lock first to simulate clean state? NO. We want the new lock!)
-                   // Wait, the logic below was restoring backup then doing install? 
-                   // The logic was: 
-                   // 1. Modify pkg & install -> Success
-                   // 2. Restore pkg & lock (why? to keep "clean slate" for NEXT iteration loop? Yes.)
-                   // 3. run install (to reset)
-                   // 4. createPR (this function internally creates a branch, re-applies changes? No.)
-                   
-                   // Ah, `createPR` helper logic:
-                   // checks out new branch, `git add package.json pnpm-lock.yaml`, commit.
-                   // It assumes the CURRENT working directory has the changes.
-                   // BUT my previous logic was REVERSING the changes before calling createPR??
-                   /*
-                   fs.writeFileSync('package.json', backupPkg);
-                   run('mv pnpm-lock.yaml.bak pnpm-lock.yaml');
-                   run('pnpm install');
-                   await createPR(...) 
-                   */
-                   // ^ This looks WRONG! I was undoing the changes, THEN calling createPR. 
-                   // createPR just commits what is on disk. If I undid it, it commits nothing (or old files).
-                   // Oh, wait. `createPR` logic:
-                   /*
-                   run(`git checkout -b ${branchName}`);
-                   run('git add package.json pnpm-lock.yaml');
-                   if (run('git commit ...') === null) ...
-                   */
-                   // Yes! I was reverting changes BEFORE createPR ran. That's why "No changes to commit" probably happened? 
-                   // Or in this case `pnpm install` failed so it went to `else` block. 
-                   // But if it had succeeded, I would have reverted it. 
-                   
-                   // CORRECT LOGIC:
-                   // 1. Modify & Install.
-                   // 2. If Success:
-                   //    a. createPR (commits CURRENT state).
-                   //    b. Restore backup (to continue loop clean).
                    
                    await createPR(
                      `chore(deps): override ${pkgName} to fix security alert`,
@@ -270,6 +235,9 @@ jobs:
                    console.log('Restoring state for next iteration...');
                    fs.writeFileSync('package.json', backupPkg);
                    run('mv pnpm-lock.yaml.bak pnpm-lock.yaml');
+                   // Restore involves going back to original lock, so frozen-lockfile is fine/safer here, 
+                   // but consistent to just use install.
+                   // Actually, if we restore the OLD lock and pkg, normal install works.
                    run('pnpm install');
 
                 } catch (installErr) {
@@ -277,7 +245,6 @@ jobs:
                    // Restore
                    fs.writeFileSync('package.json', backupPkg);
                    run('mv pnpm-lock.yaml.bak pnpm-lock.yaml');
-                   // Use run() to tolerate errors during cleanup
                    run('pnpm install');
                 }
               }
