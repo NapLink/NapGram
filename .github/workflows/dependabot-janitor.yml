@@ -12,7 +12,18 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      security-events: read
+      security-events: write # 用于 Code Scanning
+      # 需要以下权限读取 Dependabot Alerts
+      # 注意：dependabot-alerts 权限在标准 GITHUB_TOKEN 中可能需要额外配置或企业版支持
+      # 但通常 public/private repo 需要 repo 权限。
+      # 尝试使用更广泛的权限组合
+      actions: read
+      checks: read
+      deployments: read
+      issues: write
+      packages: read
+      repository-projects: read
+      statuses: read
 
     steps:
       - name: Checkout code
